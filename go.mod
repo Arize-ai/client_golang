@@ -1,4 +1,4 @@
-module github.com/Arize-ai/arize/sdk/go
+module github.com/Arize-ai/client_golang
 
 go 1.17
 

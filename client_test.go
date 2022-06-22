@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	pb "github.com/Arize-ai/arize/sdk/go/receiver/protocol/public"
+	pb "github.com/Arize-ai/client_golang/receiver/protocol/public"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/encoding/protojson"
