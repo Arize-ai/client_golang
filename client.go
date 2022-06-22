@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	pb "github.com/Arize-ai/arize/sdk/go/receiver/protocol/public"
+	pb "github.com/Arize-ai/client_golang/receiver/protocol/public"
 
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
