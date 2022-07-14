@@ -153,10 +153,10 @@ func (c *Client) Log(ctx context.Context, modelID string, modelVersion *string, 
 	req.Header = c.headers
 
 	resp, err := c.client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		return nil, errors.Wrap(err, "HTTP request failure on request to arize")
 	}
+	defer resp.Body.Close()
 
 	b, _ := ioutil.ReadAll(resp.Body)
 	return &Response{StatusCode: resp.StatusCode, Body: string(b)}, nil
