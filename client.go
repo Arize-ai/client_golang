@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	pb "github.com/Arize-ai/client_golang/receiver/protocol/public"
@@ -21,7 +23,7 @@ import (
 
 const (
 	baseURL    = "https://api.arize.com"
-	sdkVersion = "0.1.0"
+	sdkVersion = "0.1.1"
 )
 
 // Client for Arize api.
@@ -39,10 +41,11 @@ type httpClient interface {
 
 func NewClient(spaceKey, apiKey string) *Client {
 	heads := map[string][]string{
-		"authorization":             {apiKey},
-		"Grpc-Metadata-space":       {spaceKey},
-		"Grpc-Metadata-sdk-version": {sdkVersion},
-		"Grpc-Metadata-sdk":         {"go"},
+		"authorization":                  {apiKey},
+		"Grpc-Metadata-space":            {spaceKey},
+		"Grpc-Metadata-sdk-language":     {"golang"},
+		"Grpc-Metadata-language-version": {get_golang_version()},
+		"Grpc-Metadata-sdk-version":      {sdkVersion},
 	}
 	return &Client{
 		client:   http.DefaultClient,
@@ -288,4 +291,8 @@ type Embeddings struct {
 type Response struct {
 	StatusCode int
 	Body       string
+}
+
+func get_golang_version() string {
+	return strings.Split(runtime.Version(), "go")[1]
 }
