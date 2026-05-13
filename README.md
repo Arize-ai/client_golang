@@ -2,94 +2,55 @@
   <img src="https://storage.googleapis.com/arize-assets/arize-logo-white.jpg" width="600" /><br><br>
 </div>
 
-[![Slack](https://img.shields.io/badge/slack-@arize-yellow.svg?logo=slack)](https://join.slack.com/t/arize-ai/shared_invite/zt-g9c1j1xs-aQEwOAkU4T2x5K8cqI1Xqg)
-[![license](https://img.shields.io/github/license/arize-ai/client_java)](https://github.com/Arize-ai/client_java/blob/main/LICENSE)
-----
-## Overview
-A helper library to interact with Arize AI APIs.
+# ⚠️ This repository is archived
 
-Arize is an end-to-end ML observability and model monitoring platform. The platform is designed to help ML engineers and data science practitioners surface and fix issues with ML models in production faster with:
-- Automated ML monitoring and model monitoring
-- Workflows to troubleshoot model performance
-- Real-time visualizations for model performance monitoring, data quality monitoring, and drift monitoring
-- Model prediction cohort analysis
-- Pre-deployment model validation
-- Integrated model explainability
+Development of the Arize Go SDK has moved. The `client_golang` import path
+(`github.com/Arize-ai/client_golang`) is no longer maintained.
 
----
-## Quickstart
-This guide will help you instrument your code to log observability data for model monitoring and ML observability. The types of data supported include prediction labels, human readable/debuggable model features and tags, actual labels (once the ground truth is learned), and other model-related data. Logging model data allows you to generate powerful visualizations in the Arize platform to better monitor model performance, understand issues that arise, and debug your model's behavior. Additionally, Arize provides data quality monitoring, data drift detection, and performance management of your production models.
+| Use case | Go to |
+|---|---|
+| Start here for an overview of all Go SDKs | **[Arize-ai/client-go](https://github.com/Arize-ai/client-go)** |
+| Existing users of this package (ML ingest: predictions, actuals, embeddings, SHAP) | **[Arize-ai/client-go-v1](https://github.com/Arize-ai/client-go-v1)** — drop-in successor, same API surface |
+| New projects / typed REST API client (datasets, experiments, prompts, projects, …) | **[Arize-ai/client-go-v2](https://github.com/Arize-ai/client-go-v2)** |
 
-Start logging your model data with the following steps:
+## Migrating from `client_golang`
 
-### 1. Sign up for your account
-Sign up for a free account at https://arize.com/join.
+The v1 successor at [Arize-ai/client-go-v1](https://github.com/Arize-ai/client-go-v1)
+preserves the API of this package. Update your import path and run `go mod tidy`:
 
-<div align="center">
-  <img src="https://storage.googleapis.com/arize-assets/Arize%20UI%20platform.jpg" /><br><br>
-</div>
-
-### 2. Get your service API key
-When you create an account, we generate a service API key. You will need this API Key and your Space Key for logging authentication.
-
-<div align="center">
-  <img src="https://storage.googleapis.com/arize-assets/fixtures/copy-keys.png" /><br><br>
-</div>
-
-### Initialize Golang Client
-
-Initialize `arize` at the start of your service using your previously created API Key and Space Key.
-
-> **_NOTE:_** We strongly suggest storing the API key as a secret.
-
-```golang
-package main
-
-import (
-   "github.com/Arize-ai/client_golang"
-)
-
-func main() {
-	c := arize.NewClient("YOUR_SPACE_KEY", "YOUR_API_KEY")
-}
+```diff
+- import "github.com/Arize-ai/client_golang"
++ import "github.com/Arize-ai/client-go-v1"
 ```
 
-### Collect your model input features and labels you'd like to track
-
-#### Real-time single prediction:
-For a single real-time prediction, you can track all input features used at prediction time by logging them via a key:value map.
-
-```golang
-
-package main
-
-import (
-   "context"
-   "fmt"
-   "github.com/Arize-ai/client_golang"
-   "github.com/google/uuid"
-   "net/http"
-   "time"
-)
-
-func main() {
-   c := arize.NewClient("YOUR_SPACE_KEY", "YOUR_API_KEY")
-
-   modelVersion := "v1"
-   features := map[string]interface{}{"exampleFeatureName": 0.5}
-   shapValues := map[string]float64{"exampleFeatureName": 1.0}
-   eventMetadata := map[string]interface{}{"exampleEventMetadata": "xyz"}
-   prediction := 0.9
-   actual := 1.0
-   now := time.Now()
-
-   resp, err := c.Log(context.Background(), "exampleModelId", &modelVersion, uuid.NewString(), features, eventMetadata, shapValues, prediction, actual, &now, nil)
-   if err != nil {
-	   fmt.Printf("Log failed with err=%v \n", err)
-   }
-   if resp.StatusCode != http.StatusOK {
-	   fmt.Printf("Request failed with status=%v, body=%v\n")
-   }
-   fmt.Println("Successfully logged a record to Arize")
-}
+```bash
+go get github.com/Arize-ai/client-go-v1
+go mod tidy
 ```
+
+No code changes are required for the basic `NewClient` / `Log` flow.
+
+## Why the move?
+
+The package has been split into a documented directory of Go SDKs:
+
+- **client-go** — landing repo with version comparison and migration guidance
+- **client-go-v1** — the legacy ML observability ingest client (this package),
+  in maintenance mode
+- **client-go-v2** — a typed Go client for the Arize REST API, under active
+  development
+
+## Status of this repository
+
+This repository is read-only. Issues and pull requests have been disabled.
+Existing `go get github.com/Arize-ai/client_golang@<tag>` commands will
+continue to resolve because Git tags remain accessible, but no further
+releases will be cut here. Please open issues against
+[client-go-v1](https://github.com/Arize-ai/client-go-v1/issues) or
+[client-go-v2](https://github.com/Arize-ai/client-go-v2/issues) instead.
+
+## Links
+
+- [Arize platform](https://arize.com)
+- [Docs](https://docs.arize.com)
+- [Slack](https://join.slack.com/t/arize-ai/shared_invite/zt-g9c1j1xs-aQEwOAkU4T2x5K8cqI1Xqg)
